@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>アカウント登録</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+          .base {
+            margin: 2% 7% 0;
+            height: 500px;
+            background: blue;
+            padding: 5% 10%;
+            box-shadow: 5px 9px 8px 5px rgba(0, 0, 0, 0.5);
+          }
+          input {
+            width: 300px;
+            height: 40px;
+            font-size: large;
+          }
+          #tuikaBtn {
+            background: green;
+          }
+          h1 {
+            font-family: serif;
+          }
+          .form-control::placeholder {
+              color: #cacaca;
+              opacity: 1;
+          }
+          table {
+            border-collapse: collapse; 
+          }
+
+          th,td {
+            border: 1px solid #312929;
+            padding: 5px 10px;
+          }
+          .card {
+            width: 100%;
+            height: 350px;
+          }
+          .back{
+            padding: 30px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+          }
+          .form-group{
+            margin: 10px 0 15px 0px;
+          }
+          #result {
+            font-size: 120%;
+            margin: 10;
+            margin: 10px 20px;
+            padding: 10px 5px 20px;
+            margin: 10px 5px 10px 5px;
+          }
+
+          .row .card{
+            color: red;
+          }
+
+          .card{
+            color: blue;
+            display: block;
+            position: relative;
+          }
+
+          #modal{
+            display: none;
+            margin:1.5em auto 0;
+            background-color: white;
+            border: 1px solid black;
+            width: 50%;
+            padding: 10px 20px;
+            position: fixed;
+            border-radius: 5px;
+          }
+
+          #overLay{
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background-color: rgba(0,0,0,0.75);
+          }
+
+        </style>
+    </head>
+    <body>
+        <div class="base container">
+          <div class="row">
+            <h1>アカウント登録</h1>
+          </div>
+          <div class="row">
+            <div class="card" id="card">
+              <div class="card-block">
+                <form id="form-area" class="form-inline" method="post">
+                    <div class="form-group">
+                        <div class="input-group">
+                          <input id="namae" name="namae" type="text" class="form-control" placeholder="名前">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input id="nickname" name="nickname" type="text" class="form-control" placeholder="ニックネーム">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                      <input id="tuikaBtn" type="button" name="touroku" value="追加">
+                    </div>
+
+                </form>
+                <div id="tuikaMoto">
+
+                </div>
+                <div id="result"></div> 
+              </div>
+            </div>
+          </div>  
+        </div>
+      </div>
+      <div id="overLay">
+      </div>
+        <script>
+          // ここに処理を書いていきます。
+
+          // table生成
+          const table = document.createElement("table");
+          // tbody生成
+          const tbody = document.createElement("tbody");
+          tbody.id = "tbodyName";
+          // <div id=result>の中にtableを追加する
+          document.getElementById("result").appendChild(table);  
+          //tableの中にtbodyを追加する
+          table.appendChild(tbody);
+            // 追加ボタンを押した時の動作について
+            const btnEvt = function btnClick() {
+            // inputの中の値を取得
+            const namaeText = document.getElementById("namae").value;
+            const nicknameText = document.getElementById("nickname").value;
+            const userText = namaeText + " " + nicknameText;
+            // trの要素数を数えさせる
+            const $i = document.getElementsByClassName("listcount").length;              
+            // 条件分岐　
+              if ($i > 1){
+                  // 要素数が２になると登録後ボタンを隠す
+                    const result = window.confirm(namaeText + "さん" + nicknameText + "を登録します。よろしいですか？");
+                    const tr = document.createElement("tr");
+                    tr.className = "listcount";
+                    const tdnamae = document.createElement("td");
+                    tdnamae.innerText = namaeText;
+                    const tdnickname = document.createElement("td");
+                    tdnickname.innerText = nicknameText;
+                    const deletebtn = document.createElement("button");
+                    deletebtn.innerText = "削除";
+                    deletebtn.style.width = "50px";
+                    deletebtn.style.height = "40px";
+                    deletebtn.style.marginLeft = "50px";
+                    deletebtn.addEventListener("click", () => {
+                    const deleteTarget = deletebtn.parentNode;
+                    document.getElementById("tbodyName").removeChild(deleteTarget);
+                    document.getElementById("tuikaBtn").style.visibility = "visible";
+                    })
+                    document.getElementById("result").appendChild(table);
+                    table.appendChild(tbody);
+                    tbody.appendChild(tr);
+                    tr.appendChild(tdnamae);
+                    tr.appendChild(tdnickname);
+                    tr.appendChild(deletebtn);
+                    alert(namaeText + "さん" + nicknameText + "にて登録しました。");
+                    document.getElementById("tuikaBtn").style.visibility = "hidden";
+                  }else if (namaeText === "") {
+                    return; //条件分岐　未記入の場合は追加しない
+                  }else {
+                    // 確認ダイアログ（confirm）
+                    const result = window.confirm(namaeText + "さん" + nicknameText + "を登録します。よろしいですか？");
+                    // tr生成
+                    const tr = document.createElement("tr");
+                    tr.className = "listcount";
+                    // td生成
+                    const tdnamae = document.createElement("td");
+                    tdnamae.innerText = namaeText;
+                    const tdnickname = document.createElement("td");
+                    tdnickname.innerText = nicknameText;
+                    // 削除ボタン生成
+                    const deletebtn = document.createElement("button");
+                    deletebtn.innerText = "削除";
+                    deletebtn.style.width = "50px";
+                    deletebtn.style.height = "40px";
+                    deletebtn.style.marginLeft = "50px";
+                    //押された削除ボタンの親タグを削除する
+                    deletebtn.addEventListener("click", () => {
+                    const deleteTarget = deletebtn.parentNode;
+                    document.getElementById("tbodyName").removeChild(deleteTarget);
+                    document.getElementById("tuikaBtn").style.visibility = "visible";
+                    })
+                    //tbodyの中にtrを追加する
+                    tbody.appendChild(tr);
+                    // trの中にtdと削除ボタンを追加する
+                    tr.appendChild(tdnamae);
+                    tr.appendChild(tdnickname);
+                    tr.appendChild(deletebtn);
+                    alert(namaeText + "さん" + nicknameText + "にて登録しました。");
+                  }
+              }
+          // ボタンを押したときに発火させる
+          const addBtn = document.getElementById("tuikaBtn");
+          addBtn.addEventListener("click", btnEvt)
+        </script>
+    </body>
+</html>
